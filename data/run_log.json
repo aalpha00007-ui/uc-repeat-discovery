@@ -1,0 +1,27 @@
+{
+  "project": "Urban Company repeat bookings",
+  "models": {
+    "labelling": "Gemini (n8n run, 24 Nov 2026); new runs: Gemini via run.py",
+    "free-text grouping": "claude-opus-5-5 (in session, seed only)",
+    "ask the engine": "Gemini"
+  },
+  "seed": {
+    "run_id": "run_2026-11-24T17-44-26",
+    "file": "Urban Company Discovery Engine - Data (final)",
+    "n8n_note": "1000 home-service posts (target 1000) from 10 sources, out of 5087 collected; 576 relevant customer posts. Lookback 365 days. India customers only: 9 posts about other countries removed before labelling and 10 by the AI.",
+    "collected_before_dedupe": 5087,
+    "sample_note": "The n8n run coded a 1,000-post sample of candidates; run.py codes every candidate."
+  },
+  "runs": [
+    {
+      "at": "run_2026-11-24T17-44-26",
+      "step": "seed import",
+      "records": 4503,
+      "coded": 892,
+      "gate_counts": {
+        "passed_first": 875,
+        "rejected": 17
+      }
+    }
+  ]
+}
