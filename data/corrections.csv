@@ -1,0 +1,3 @@
+record_id,field,from,to,reason,by
+gp_3a135116-95cd-4986-8d87-2e85d8c38fb9,category,Not stated,InstaHelp,"Describes Rs 99-175 per-visit maid/helper pricing and compares it with a local maid: this is InstaHelp quick-service housekeeping, which is out of scope","Claude (in session, 27 Nov 2026), for researcher review"
+gp_8fe7bc20-ab22-4d81-bd38-24f51861a26a,category,Cleaning,InstaHelp,"Borderline: a time-boxed 45-minute cleaning booking with a start-of-job check matches InstaHelp's hourly model, so excluded to keep scope strict; delete this row to bring it back","Claude (in session, 27 Nov 2026), for researcher review"
