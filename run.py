@@ -92,8 +92,8 @@ def cmd_label(limit, rpm, batch):
 
 
 def cmd_golden():
-    rec, coded = _read(REC), _read(CODED)
-    df = analysis.prepare(coded, rec)
+    rec, coded, log, _, _ = analysis.load(DATA)
+    df = analysis.prepare(coded, rec, log.get("corrections"))
     gs = golden.pick(df)
     gs.to_csv(os.path.join(DATA, "golden_set.csv"), index=False)
     golden.write_template(gs, os.path.join(DATA, "golden_set_to_label.xlsx"))

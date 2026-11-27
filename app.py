@@ -36,7 +36,7 @@ div[data-testid="stMetricValue"] {font-size: 2.1rem;}
 @st.cache_data
 def load_all():
     rec, coded, log, gset, golden = A.load()
-    df = A.prepare(coded, rec)
+    df = A.prepare(coded, rec, log.get("corrections"))
     return rec, df, log, gset, golden
 
 
@@ -345,6 +345,9 @@ with tabs[6]:
     st.markdown("**Models used:** " + " · ".join(f"{k}: {v}" for k, v in models.items()))
     st.caption("Gates: allowed values only · evidence quote must exist word-for-word in the post · "
                "labels must not contradict each other. One retry, then reject.")
+    if run_log.get("corrections"):
+        with st.expander(f"Researcher corrections to AI labels ({len(run_log['corrections'])})"):
+            st.dataframe(pd.DataFrame(run_log["corrections"]), hide_index=True, width="stretch")
     with st.expander("Rejected outputs and why"):
         rej = df_all[df_all["gate_status"] == "rejected"][["record_id", "source", "gate_fails", "evidence_quote", "text"]]
         rej = rej.assign(source=rej["source"].map(src_label))
@@ -394,7 +397,7 @@ with tabs[7]:
     st.subheader("Pipeline (code: run.py)")
     st.markdown(f"""
 1. **Collect public feedback** — Play Store and App Store reviews of the Urban Company app, Reddit threads (found through Google, comments read from public pages), Google Search results (review and complaint sites, Quora, blogs) and YouTube comments on Urban Company videos. India only. Authors are stored only as one-way hashes; phone numbers and e-mails are masked.
-2. **Prefilter (code, no AI)** — de-duplicate, drop posts under 25 characters or older than 365 days, exclude InstaHelp and posts about other countries, keep posts about home or beauty services.
+2. **Prefilter (code, no AI)** — de-duplicate, drop posts under 25 characters or older than 365 days, exclude InstaHelp (Urban Company's quick-service housekeeping, including its old 'Insta Maid' name and 'maid on call' wording) and posts about other countries, keep posts about home or beauty services.
 3. **AI coding (Gemini, temperature 0)** — every candidate post is labelled against a {len(CODEBOOK)}-field codebook mapped to the brief's eight questions: relevance, speaker, category, return status, something went wrong, reasons, need trigger, planning, expectation after the job, who they turn to next, what they do outside the app, unmet need, household, how they found UC, return timing and country — plus a word-for-word evidence quote.
 4. **Quality gates on every output** — allowed values only, an exact supporting quote from the post, and logical consistency. Failures get one retry, then are rejected and excluded.
 5. **Analysis in code** — label shares, returners vs lost comparison, segment splits, the metric-tree view and an opportunity score per unmet need. No number is produced by the LLM.
