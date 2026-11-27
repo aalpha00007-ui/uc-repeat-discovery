@@ -33,14 +33,20 @@ div[data-testid="stMetricValue"] {font-size: 2.1rem;}
 
 
 # ------------------------------------------------------------------ data
+def data_stamp():
+    """Changes whenever a file in data/ changes, so new data is never served from cache."""
+    return tuple(sorted((f, os.path.getmtime(os.path.join("data", f)), os.path.getsize(os.path.join("data", f)))
+                        for f in os.listdir("data") if os.path.isfile(os.path.join("data", f))))
+
+
 @st.cache_data
-def load_all():
+def load_all(stamp):
     rec, coded, log, gset, golden = A.load()
     df = A.prepare(coded, rec, log.get("corrections"))
     return rec, df, log, gset, golden
 
 
-rec, df_all, run_log, gset, golden = load_all()
+rec, df_all, run_log, gset, golden = load_all(data_stamp())
 passed = df_all[df_all["passed"] & df_all["in_scope"]]
 
 
