@@ -18,7 +18,7 @@ FIELD_VALUES["primary_theme"] = CODEBOOK["themes"]["values"]
 
 
 def pick(df: pd.DataFrame, n: int = 20, seed: int = 42) -> pd.DataFrame:
-    pool = df[df["passed"]].copy()
+    pool = df[df["passed"] & ~df["instahelp"]].copy()   # InstaHelp is out of scope
     counts = pool["source"].value_counts()
     alloc = (counts / counts.sum() * n).round().astype(int).clip(lower=1)
     alloc = alloc[counts >= 5]

@@ -7,8 +7,8 @@ from collections import Counter
 import numpy as np
 import pandas as pd
 
-from .config import (CITY_ALIASES, CODEBOOK, CONTROLLABILITY, LOST, NS, RETURNED,
-                     THEME_BRANCH, TOP8_CITIES, WENT_ELSEWHERE)
+from .config import (CITY_ALIASES, CODEBOOK, CONTROLLABILITY, EXCLUDE_TERMS, LOST, NS,
+                     RETURNED, THEME_BRANCH, TOP8_CITIES, WENT_ELSEWHERE)
 from .gates import as_list
 
 DATA = "data"
@@ -32,16 +32,28 @@ def load(data_dir: str = DATA):
     gs = os.path.join(data_dir, "golden_set.csv")
     if os.path.exists(gs):
         gset = pd.read_csv(gs, dtype=str, keep_default_na=False)
+    corr = os.path.join(data_dir, "corrections.csv")
+    if os.path.exists(corr):
+        log["corrections"] = pd.read_csv(corr, dtype=str, keep_default_na=False).to_dict("records")
     return rec, coded, log, gset, golden
 
 
-def prepare(coded: pd.DataFrame, rec: pd.DataFrame) -> pd.DataFrame:
+def mentions_instahelp(text: str) -> bool:
+    low = f" {str(text).lower()} "
+    return any(t in low for t in EXCLUDE_TERMS["instahelp"])
+
+
+def prepare(coded: pd.DataFrame, rec: pd.DataFrame, corrections: list | None = None) -> pd.DataFrame:
     df = coded.copy()
     meta = rec.set_index("record_id")[["source", "text", "link", "date", "rating", "type"]]
     for c in meta.columns:
         if c not in df.columns or (df[c] == "").all():
             df[c] = df["record_id"].map(meta[c]).fillna("")
     df["passed"] = df["gate_status"].isin(["passed_first", "passed_retry"])
+    if corrections:   # researcher corrections to AI labels, logged in data/corrections.csv
+        for c in corrections:
+            m = df["record_id"] == c["record_id"]
+            df.loc[m, c["field"]] = c["to"]
     df["theme_list"] = df["themes"].map(as_list)
     df["outside_list"] = df["outside_app"].map(as_list)
     df["primary_theme"] = df["theme_list"].map(lambda t: t[0] if t else "Other")
@@ -61,8 +73,8 @@ def prepare(coded: pd.DataFrame, rec: pd.DataFrame) -> pd.DataFrame:
     df["group"] = df.apply(group, axis=1)
     df["went_elsewhere"] = df["turn_to_next"].isin(WENT_ELSEWHERE)
     df["nothing_wrong"] = df["went_wrong"] == "No"
-    df["in_scope"] = (df["relevant"] == "Yes") & (df["country"] != "Outside India") & \
-                     (df["category"] != "InstaHelp")
+    df["instahelp"] = (df["category"] == "InstaHelp") | df["text"].map(mentions_instahelp)
+    df["in_scope"] = (df["relevant"] == "Yes") & (df["country"] != "Outside India") & ~df["instahelp"]
     df["core"] = df["in_scope"] & (df["speaker"] == "Customer") & (
         (df["return_status"] != NS) | df["went_elsewhere"] |
         df["theme_list"].map(lambda t: any(x not in ("Other",) for x in t)))

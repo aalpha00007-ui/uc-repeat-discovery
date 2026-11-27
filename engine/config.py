@@ -98,7 +98,12 @@ SERVICE_TERMS = [
     "slot", "repair", "warranty", "refund", "ro ", "purifier", "native",
 ]
 EXCLUDE_TERMS = {
-    "instahelp": ["instahelp", "insta help"],
+    # InstaHelp = Urban Company's quick-service housekeeping (earlier "Insta Maids"):
+    # out of scope for this project, matched by name or by its usual descriptions
+    "instahelp": ["instahelp", "insta help", "insta-help", "insta maid", "instamaid",
+                  "insta-maid", "instant maid", "maid on call", "15 min maid",
+                  "15-min maid", "15 minute maid", "15-minute maid", "10 minute maid",
+                  "10-minute maid"],
     "outside_india": ["dubai", "abu dhabi", "uae", "singapore", "saudi", "riyadh"],
 }
 
@@ -118,7 +123,9 @@ CODEBOOK = {
         "values": ["Customer", "Professional", "Company", "Other"],
     },
     "category": {
-        "q": "Q7: Which service category is this about?",
+        "q": "Q7: Which service category is this about? Use 'InstaHelp' for Urban Company's "
+             "quick-service housekeeping (also called Insta Maid, maid on call, or an hourly "
+             "maid/helper for about Rs 49-150); it is out of scope and gets excluded.",
         "values": ["Cleaning", "AC & appliances", "Electrician, plumber, carpenter",
                    "Salon & spa", "Pest control", "Painting", "Native products",
                    "Multiple", "InstaHelp", NS],
