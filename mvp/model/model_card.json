@@ -1,0 +1,28 @@
+{
+ "trained_on": 468,
+ "problem": 265,
+ "no_problem": 203,
+ "sources": {
+  "app_store": 169,
+  "play_store": 166,
+  "trustpilot": 66,
+  "youtube": 32,
+  "reddit": 16,
+  "social_media": 11,
+  "complaint_sites": 6,
+  "google_search": 2
+ },
+ "cv_accuracy": 0.893,
+ "precision_problem": 0.88,
+ "recall_problem": 0.94,
+ "confusion": {
+  "problem_caught": 249,
+  "problem_missed": 16,
+  "false_alarm": 34,
+  "fine_correct": 169
+ },
+ "rules_accuracy": 0.639,
+ "rules_problems_caught": 101,
+ "labels_from": "the discovery engine's Gemini coding (went_wrong = Yes / No), gate-checked",
+ "run_at": "29 Nov 2026 00:12"
+}
