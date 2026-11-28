@@ -152,3 +152,39 @@ def test_every_template_passes_its_own_gates():
 
 def test_inr_uses_indian_grouping():
     assert inr(599) == "₹599" and inr(3499) == "₹3,499" and inr(123456) == "₹1,23,456"
+
+
+# ---------------------------------------------------------------- trained model (no API key)
+
+def test_model_reads_words_without_any_key():
+    a = detect.assess(AC)
+    assert a.mode == "model" and a.prob is not None and a.prob >= 0.65 and a.type == "poor_job"
+
+
+def test_model_says_fine_for_praise():
+    b = Booking("Switchboard repair", "S", "Today", 199, rating=5, text="Quick and neat work, thank you.")
+    a = detect.assess(b)
+    assert a.type == "no_problem" and a.prob < 0.35
+
+
+def test_low_rating_beats_a_model_that_says_fine():
+    b = Booking("Switchboard repair", "S", "Today", 199, rating=1, text="Quick and neat work, thank you.")
+    a = detect.assess(b)
+    assert a.type == "poor_job" and a.mode == "rules_fallback"
+
+
+def test_unsure_model_hands_over_to_rules():
+    b = cases.SCENARIOS[4]["booking"]          # late and rushed salon: the model is near 50%
+    a = detect.assess(b)
+    assert a.mode == "rules_fallback" and a.type == "poor_job"
+
+
+def test_cancellation_and_safety_do_not_depend_on_the_model():
+    assert detect.assess(cases.SCENARIOS[1]["booking"]).type == "no_show"
+    assert detect.assess(cases.SCENARIOS[5]["booking"]).route == "person"
+
+
+def test_model_card_shows_it_beats_keyword_rules():
+    from core import model
+    c = model.card()
+    assert c["trained_on"] == 468 and c["cv_accuracy"] > c["rules_accuracy"]
