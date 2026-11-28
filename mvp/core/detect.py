@@ -75,6 +75,7 @@ class Assessment:
     checks: list = field(default_factory=list)
     notes: list = field(default_factory=list)
     model: str | None = None
+    prob: float | None = None         # trained model: chance that something went wrong
 
     @property
     def route(self) -> str:
@@ -208,7 +209,7 @@ def safety_check(b: Booking, a: Assessment) -> Assessment:
     return a
 
 
-def assess(b: Booking, llm=None) -> Assessment:
+def assess(b: Booking, llm=None, use_model: bool = True) -> Assessment:
     if llm is not None and getattr(llm, "available", False):
         user = (f"Booking facts: {json.dumps({'service': b.service, 'paid': b.paid, 'signals': hard_signals(b)})}\n"
                 f"Customer's words: {json.dumps(b.text)}")
@@ -236,9 +237,59 @@ def assess(b: Booking, llm=None) -> Assessment:
                          "detail": "blocked after one retry: " + "; ".join(failed)[:200]},
                         {"name": "Rules used instead", "passed": True, "detail": "keyword and signal rules"}])
         return safety_check(b, a)
+    if use_model:
+        return assess_model(b)
     t, s, f, ev = rules(b)
     a = Assessment(t, s, f, ev, "rules",
                    [{"name": "Labels are from the allowed list", "passed": True, "detail": "set by rules"},
                     {"name": "Evidence is the customer's own words", "passed": (not ev) or ev in b.text,
                      "detail": f'"{ev}"' if ev else "no quote needed"}])
     return safety_check(b, a)
+
+
+def assess_model(b: Booking) -> Assessment:
+    """No API key needed: our trained model reads the words, signals and code rules keep it honest.
+
+    Order: a cancellation or clear words (overcharge, behaviour, safety) set the type first. Otherwise the model
+    decides whether something went wrong. If it is unsure, or it says "fine" while the customer gave 1-2 stars,
+    the rating and rules decide instead.
+    """
+    from core import model  # local import keeps the module light for the rules-only path
+
+    t, s, f, ev = rules(b)
+    p = model.prob_problem(b.text) if b.text.strip() else None
+    checks = []
+    if p is not None:
+        checks.append({"name": "Model read the customer's words", "passed": True,
+                       "detail": f"something went wrong: {p:.0%} likely"})
+    if b.event == "cancelled" or t in ("damage_safety", "behaviour", "overcharge"):
+        why = "the professional cancelled" if b.event == "cancelled" else "clear words in the customer's message"
+        checks.append({"name": "Type set by a signal or clear words", "passed": True, "detail": f"{SHORT[t]}: {why}"})
+        return safety_check(b, Assessment(t, s, f, ev, "model" if p is not None else "rules", checks, prob=p))
+    if p is None:
+        checks.append({"name": "No customer words", "passed": True, "detail": "the rating and signals decide"})
+        return safety_check(b, Assessment(t, s, f, ev, "rules", checks))
+    lo, hi = model.UNSURE
+    if lo < p < hi:
+        checks.append({"name": "Model confident enough", "passed": False,
+                       "detail": f"{p:.0%} is too close to call, so the rating and rules decide"})
+        return safety_check(b, Assessment(t, s, f, ev, "rules_fallback", checks, prob=p))
+    checks.append({"name": "Model confident enough", "passed": True,
+                   "detail": f"{p:.0%} is outside the unsure zone ({lo:.0%} to {hi:.0%})"})
+    if p >= hi:
+        typ = t if t in ("poor_job", "late") else "poor_job"
+        sev = s if typ == t else ("high" if b.rating == 1 or b.paid >= 2000 else "medium")
+        checks.append({"name": "Matches the booking's signals", "passed": True, "detail": "nothing contradicts it"})
+        return safety_check(b, Assessment(typ, sev, "professional", model.best_clause(b.text), "model", checks,
+                                          prob=p))
+    if b.rating is not None and b.rating <= 2:
+        checks.append({"name": "Matches the booking's signals", "passed": False,
+                       "detail": f"the model says fine, but the customer rated {b.rating} of 5, so the rating wins"})
+        typ = t if t != "no_problem" else "poor_job"
+        return safety_check(b, Assessment(typ, s if typ == t else "medium", "professional", ev, "rules_fallback",
+                                          checks, prob=p))
+    checks.append({"name": "Matches the booking's signals", "passed": True, "detail": "agrees with the rating"})
+    if b.event == "late" and b.late_min >= 30:
+        return safety_check(b, Assessment("late", "medium" if b.late_min >= 60 else "low", "professional", "",
+                                          "model", checks, prob=p))
+    return safety_check(b, Assessment("no_problem", "low", "unclear", "", "model", checks, prob=p))
