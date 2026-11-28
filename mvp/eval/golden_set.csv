@@ -1,0 +1,33 @@
+id,service,event,rating,late_min,cancel_min_before,quoted,billed,text,expected_type,note
+G01,AC service,done,2,0,0,,,"Cooling still weak, he left in 20 minutes.",poor_job,research scenario
+G02,Full home deep cleaning,cancelled,,0,40,,,,no_show,cancelled with no text
+G03,Tap and fitting repair,done,2,0,0,259,521,Bill went from 259 to 521 for a small tap fitting.,overcharge,bill above quote
+G04,Pest control (cockroaches),done,2,0,0,,,"Ek hafte mein cockroach wapas aa gaye, lagta hai sirf paani spray kiya.",poor_job,Hinglish
+G05,Salon at home (waxing + facial),late,2,45,0,,,Came 45 minutes late and rushed through everything.,poor_job,late and rushed: the job problem wins
+G06,Bathroom cleaning,done,1,0,0,,,"The acid he used damaged all my bathroom fittings, the chrome is gone.",damage_safety,damage
+G07,Switchboard repair,done,5,0,0,,,"Quick and neat work, thank you.",no_problem,happy customer
+G08,AC service,done,1,0,0,,,Mera AC abhi bhi thanda nahi kar raha.,poor_job,Hindi in Latin script
+G09,Full home deep cleaning,done,2,0,0,,,Kitchen was half cleaned and the stains are still there.,poor_job,incomplete job
+G10,AC service,done,5,0,0,,,Water leakage fixed nicely. Very polite technician.,no_problem,"'leak' must not trigger damage"
+G11,Tap and fitting repair,done,1,0,0,,,He broke the tile while drilling and just left.,damage_safety,broke something
+G12,Salon at home (waxing + facial),done,1,0,0,,,The wax was too hot and burnt my arm.,damage_safety,injury
+G13,Full home deep cleaning,done,3,0,0,,,My watch went missing after the cleaners left.,damage_safety,possible theft
+G14,AC service,done,2,0,0,,,He was rude and kept asking for a tip.,behaviour,asked for tip
+G15,Switchboard repair,done,2,0,0,,,He told me to pay him directly on his number next time to save money.,behaviour,asked to go off the app
+G16,Pest control (cockroaches),done,4,0,0,,,Took time but did the job properly.,no_problem,mild but fine
+G17,Bathroom cleaning,late,4,35,0,,,"Came 35 minutes late, but cleaning was good.",late,late only
+G18,AC service,late,3,70,0,,,,late,very late with no text
+G19,Tap and fitting repair,done,2,0,0,,,Charged me 300 extra for a part he never changed.,overcharge,surprise charge
+G20,Full home deep cleaning,done,2,0,0,,,Zyada paise le liye jo app mein dikhaya tha usse.,overcharge,Hinglish overcharge
+G21,Salon at home (waxing + facial),cancelled,,0,15,,,She cancelled 15 minutes before and nobody else came.,no_show,last-minute cancellation
+G22,Pest control (cockroaches),cancelled,,0,480,,,,no_show,cancelled the evening before
+G23,AC service,done,1,0,0,,,Same problem again after two days. Waste of money.,poor_job,problem came back
+G24,Bathroom cleaning,done,3,0,0,,,,poor_job,3 stars and no words: treat as a mild problem
+G25,Switchboard repair,done,2,0,0,,,There was a spark from the board after he left.,damage_safety,electrical safety
+G26,Full home deep cleaning,done,1,0,0,,,Team came without any machine and only did hand washing.,poor_job,came unprepared
+G27,Salon at home (waxing + facial),done,5,0,0,,,Badhiya service tha. Bahut accha.,no_problem,happy in Hinglish
+G28,AC service,done,2,0,0,,,Technician said AC is not repairable and to buy a new one. Local guy fixed it for 2000.,poor_job,wrong diagnosis
+G29,Tap and fitting repair,done,1,0,0,,,Very bad attitude and shouted at my mother.,behaviour,rude behaviour
+G30,Pest control (cockroaches),done,2,0,0,,,Treatment was ineffective. No difference at all.,poor_job,no effect
+G31,Full home deep cleaning,done,4,0,0,,,Good job overall.,no_problem,fine
+G32,Salon at home (waxing + facial),late,2,40,0,,,She came late and left the facial half done.,poor_job,late and incomplete
