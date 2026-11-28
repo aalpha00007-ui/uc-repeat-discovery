@@ -1,6 +1,6 @@
 {
- "run_at": "28 Nov 2026 22:34",
- "mode": "rules (AI not configured)",
+ "run_at": "29 Nov 2026 00:13",
+ "mode": "trained model + rules (no API key)",
  "labels": "draft, to be checked by hand",
  "summary": {
   "total": 32,
@@ -18,7 +18,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "research scenario"
   },
@@ -40,7 +40,7 @@
    "got": "overcharge",
    "pass": "✓",
    "route": "refund_diff",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "bill above quote"
   },
@@ -51,7 +51,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "Hinglish"
   },
@@ -62,7 +62,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "late and rushed: the job problem wins"
   },
@@ -73,7 +73,7 @@
    "got": "damage_safety",
    "pass": "✓",
    "route": "person",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "damage"
   },
@@ -84,7 +84,7 @@
    "got": "no_problem",
    "pass": "✓",
    "route": "none",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "happy customer"
   },
@@ -95,7 +95,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "Hindi in Latin script"
   },
@@ -106,7 +106,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "incomplete job"
   },
@@ -117,7 +117,7 @@
    "got": "no_problem",
    "pass": "✓",
    "route": "none",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "'leak' must not trigger damage"
   },
@@ -128,7 +128,7 @@
    "got": "damage_safety",
    "pass": "✓",
    "route": "person",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "broke something"
   },
@@ -139,7 +139,7 @@
    "got": "damage_safety",
    "pass": "✓",
    "route": "person",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "injury"
   },
@@ -150,7 +150,7 @@
    "got": "damage_safety",
    "pass": "✓",
    "route": "person",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "possible theft"
   },
@@ -161,7 +161,7 @@
    "got": "behaviour",
    "pass": "✓",
    "route": "person",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "asked for tip"
   },
@@ -172,7 +172,7 @@
    "got": "behaviour",
    "pass": "✓",
    "route": "person",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "asked to go off the app"
   },
@@ -183,7 +183,7 @@
    "got": "no_problem",
    "pass": "✓",
    "route": "none",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "mild but fine"
   },
@@ -194,7 +194,7 @@
    "got": "late",
    "pass": "✓",
    "route": "credit",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "late only"
   },
@@ -216,7 +216,7 @@
    "got": "overcharge",
    "pass": "✓",
    "route": "refund_diff",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "surprise charge"
   },
@@ -227,7 +227,7 @@
    "got": "overcharge",
    "pass": "✓",
    "route": "refund_diff",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "Hinglish overcharge"
   },
@@ -238,7 +238,7 @@
    "got": "no_show",
    "pass": "✓",
    "route": "rescue",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "last-minute cancellation"
   },
@@ -260,7 +260,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "problem came back"
   },
@@ -282,7 +282,7 @@
    "got": "damage_safety",
    "pass": "✓",
    "route": "person",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "electrical safety"
   },
@@ -293,7 +293,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "came unprepared"
   },
@@ -304,7 +304,7 @@
    "got": "no_problem",
    "pass": "✓",
    "route": "none",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "happy in Hinglish"
   },
@@ -315,7 +315,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "wrong diagnosis"
   },
@@ -326,7 +326,7 @@
    "got": "behaviour",
    "pass": "✓",
    "route": "person",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "rude behaviour"
   },
@@ -337,7 +337,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "no effect"
   },
@@ -348,7 +348,7 @@
    "got": "no_problem",
    "pass": "✓",
    "route": "none",
-   "label_mode": "rules",
+   "label_mode": "model",
    "message_mode": "template",
    "note": "fine"
   },
@@ -359,7 +359,7 @@
    "got": "poor_job",
    "pass": "✓",
    "route": "fix",
-   "label_mode": "rules",
+   "label_mode": "rules_fallback",
    "message_mode": "template",
    "note": "late and incomplete"
   }

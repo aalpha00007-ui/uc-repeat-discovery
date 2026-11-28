@@ -1,7 +1,7 @@
 """Scores the failure check and the customer messages against the golden set.
 
-    python mvp/eval/run_eval.py            # uses Gemini if GEMINI_API_KEY is set, otherwise the rules
-    python mvp/eval/run_eval.py --rules    # force the rules, to compare
+    python mvp/eval/run_eval.py            # trained model + rules (uses Gemini instead if GEMINI_API_KEY is set)
+    python mvp/eval/run_eval.py --rules    # keyword rules only, to compare
 
 Writes mvp/eval/report.json, which the app shows under "How it works and quality".
 """
@@ -39,12 +39,13 @@ def booking(row: dict) -> Booking:
 
 def main(force_rules: bool = False):
     llm = None if force_rules else Gemini()
+    use_model = not force_rules
     rows = list(csv.DictReader(open(HERE / "golden_set.csv", encoding="utf-8")))
     out, type_right, safety_total, safety_person, msg_total, msg_clean = [], 0, 0, 0, 0, 0
     modes = set()
     for r in rows:
         b = booking(r)
-        a = detect.assess(b, llm)
+        a = detect.assess(b, llm, use_model=use_model)
         modes.add(a.mode)
         p = remedy.plan(b, a)
         m = message.write(b, p, remedy.message_facts(b, p), llm)
@@ -61,7 +62,8 @@ def main(force_rules: bool = False):
                     "expected": r["expected_type"], "got": a.type, "pass": "✓" if ok else "✗",
                     "route": a.route, "label_mode": a.mode, "message_mode": m.mode, "note": r["note"]})
     mode = ("AI (Gemini) with rules fallback" if "ai" in modes else
-            "rules (AI not configured)" if modes == {"rules"} else "rules fallback (AI failed)")
+            "trained model + rules (no API key)" if "model" in modes else
+            "rules only" if modes == {"rules"} else "rules fallback (AI failed)")
     report = {
         "run_at": datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%d %b %Y %H:%M"),
         "mode": mode, "labels": LABEL_STATUS,
